@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b3d91">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Badminton-NDP</title>
+<style>
+:root{
+  --blue:#2d9bf0;--dark:#0b3d91;--green:#0f766e;--bg:#f4f7fb;--card:#fff;
+  --text:#111827;--muted:#6b7280;--shadow:0 6px 18px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+body{overflow:hidden}
+.hidden{display:none!important}
+button,input,select{
+  border:0;border-radius:9px;padding:6px 8px;font-weight:750;font-size:11px;min-height:28px;background:#e5e7eb;color:#111827;
+}
+button{cursor:pointer}
+button.primary{background:var(--green);color:#fff}
+button.blue{background:#2563eb;color:#fff}
+button.red{background:#fee2e2;color:#991b1b}
+button.active{outline:3px solid #facc15}
+input,select{width:100%;background:#f3f4f6}
+.app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:5px;padding:5px}
+header{
+  background:white;border-radius:12px;padding:5px 7px;box-shadow:var(--shadow);
+  display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;
+}
+.logo{width:34px;height:34px;object-fit:contain;border-radius:6px}
+h1{margin:0;font-size:16px;color:var(--dark);line-height:1}
+.subtitle{font-size:10px;color:var(--muted);margin-top:2px}
+.topBtns{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+main{min-height:0;display:grid;grid-template-columns:1fr 292px;gap:5px}
+.courtWrap{background:white;border-radius:12px;padding:5px;box-shadow:var(--shadow);min-height:0;display:flex}
+svg{width:100%;height:100%;display:block;background:var(--blue);border-radius:8px;touch-action:none;user-select:none}
+.panel{min-height:0;overflow:auto;display:grid;grid-template-columns:1fr;gap:5px;align-content:start}
+.card{background:white;border-radius:12px;padding:7px;box-shadow:var(--shadow)}
+.card h2{font-size:12px;margin:0 0 5px;color:#0f3f5f}
+.row{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.grid3{display:grid;grid-template-columns:1fr 38px 56px;gap:4px}
+.shotItem{display:flex;gap:3px;align-items:center}
+.shotItem button:first-child{flex:1}
+.delShot{background:#fee2e2;color:#991b1b;min-width:26px;padding:6px 7px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.stat{border:1px solid #e5e7eb;border-radius:9px;padding:5px;background:#f9fafb;font-size:10px}
+.stat b{display:block;font-size:15px;color:var(--green)}
+.legend{font-size:10px;color:var(--muted);line-height:1.25}
+.footer{
+  display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#6b7280;padding:0 4px;
+}
+@media(max-width:950px){
+  main{grid-template-columns:1fr;grid-template-rows:1fr auto}
+  .panel{max-height:39dvh;grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:680px){
+  header{grid-template-columns:auto 1fr}
+  .topBtns{grid-column:1/-1;justify-content:flex-start}
+  .panel{grid-template-columns:1fr 1fr;max-height:44dvh}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <img class="logo" src="icon-192.png" alt="Logo">
+  <div>
+    <h1>Badminton-NDP</h1>
+    <div class="subtitle">Nuage de points</div>
+  </div>
+  <div class="topBtns">
+    <button id="fullscreenBtn">Plein écran</button>
+  </div>
+</header>
+
+<main>
+  <section class="courtWrap">
+    <svg id="court" viewBox="0 0 1340 610" preserveAspectRatio="xMidYMid meet">
+      <rect x="0" y="0" width="1340" height="610" fill="#2d9bf0"></rect>
+      <g stroke="#111" stroke-width="5" fill="none" stroke-linecap="square">
+        <rect x="10" y="10" width="1320" height="590"></rect>
+        <line x1="10" y1="55" x2="1330" y2="55"></line>
+        <line x1="10" y1="555" x2="1330" y2="555"></line>
+        <line x1="10" y1="305" x2="468" y2="305"></line>
+        <line x1="872" y1="305" x2="1330" y2="305"></line>
+        <line x1="82" y1="10" x2="82" y2="600"></line>
+        <line x1="468" y1="10" x2="468" y2="600"></line>
+        <line x1="670" y1="10" x2="670" y2="600" stroke-dasharray="16 16"></line>
+        <line x1="872" y1="10" x2="872" y2="600"></line>
+        <line x1="1258" y1="10" x2="1258" y2="600"></line>
+      </g>
+      <g font-size="30" font-weight="900" text-anchor="middle" fill="#0f172a">
+        <text id="leftLabel" x="340" y="40"></text>
+        <text id="rightLabel" x="1000" y="40"></text>
+      </g>
+      <g id="hullLayer"></g>
+      <g id="pointsLayer"></g>
+    </svg>
+  </section>
+
+  <aside class="panel">
+    <div class="card">
+      <h2>Joueurs</h2>
+      <div class="grid2">
+        <input id="leftName" placeholder="Gauche">
+        <input id="rightName" placeholder="Droite">
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Observation</h2>
+      <div class="row">
+        <button id="halfBtn" class="primary">Camp : droite</button>
+        <button id="undoBtn">Annuler</button>
+        <button id="resetBtn" class="red">Effacer</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Frappes</h2>
+      <select id="shotType"></select>
+      <div id="shotButtons" class="row" style="margin-top:5px"></div>
+      <div class="grid3" style="margin-top:5px">
+        <input id="newShotName" placeholder="Ajouter">
+        <input id="newShotColor" type="color" value="#9333ea">
+        <button id="addShotBtn" class="primary">OK</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Filtre</h2>
+      <div id="filterButtons" class="row"></div>
+    </div>
+
+    <div class="card">
+      <h2>Stats</h2>
+      <div id="statsBox" class="stats"></div>
+    </div>
+
+    <div class="card">
+      <h2>Données</h2>
+      <div class="row">
+        <button id="exportBtn">JSON</button>
+        <button id="captureBtn" class="blue">Capture PNG</button>
+      </div>
+    </div>
+  </aside>
+</main>
+
+<footer class="footer">
+  <span>Badminton-NDP</span>
+  <strong>By Quentin Delisle</strong>
+</footer>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const svg=document.getElementById('court'), pointsLayer=document.getElementById('pointsLayer'), hullLayer=document.getElementById('hullLayer');
+  const shotType=document.getElementById('shotType'), shotButtons=document.getElementById('shotButtons'), filterButtons=document.getElementById('filterButtons');
+  const statsBox=document.getElementById('statsBox'), halfBtn=document.getElementById('halfBtn');
+  const leftName=document.getElementById('leftName'), rightName=document.getElementById('rightName'), leftLabel=document.getElementById('leftLabel'), rightLabel=document.getElementById('rightLabel');
+  const court={left:10,right:1330,top:10,bottom:600,playTop:55,playBottom:555,net:670};
+  let half=localStorage.getItem('ndp_half')||'right', filter='all';
+  let points=JSON.parse(localStorage.getItem('ndp_points')||'[]');
+  let shots=JSON.parse(localStorage.getItem('ndp_shots')||'null')||[
+    {id:'frappe',name:'Frappe',color:'#374151'},
+    {id:'amorti',name:'Amorti',color:'#dc2626'},
+    {id:'smash',name:'Smash',color:'#2563eb'}
+  ];
+  const baseShotIds=['frappe','amorti','smash'];
+  // Nettoyage si une ancienne version avait mémorisé d'autres frappes par défaut.
+  const wantedBase = {
+    frappe:{id:'frappe',name:'Frappe',color:'#374151'},
+    amorti:{id:'amorti',name:'Amorti',color:'#dc2626'},
+    smash:{id:'smash',name:'Smash',color:'#2563eb'}
+  };
+  shots = shots.filter(s => baseShotIds.includes(s.id) || !['degage','contre_amorti'].includes(s.id));
+  baseShotIds.forEach(id => {
+    const idx = shots.findIndex(s => s.id === id);
+    if(idx >= 0) shots[idx] = wantedBase[id];
+    else shots.unshift(wantedBase[id]);
+  });
+  shots.sort((a,b)=>{
+    const ia=baseShotIds.indexOf(a.id), ib=baseShotIds.indexOf(b.id);
+    if(ia>=0 && ib>=0) return ia-ib;
+    if(ia>=0) return -1;
+    if(ib>=0) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  leftName.value=localStorage.getItem('ndp_left')||''; rightName.value=localStorage.getItem('ndp_right')||'';
+  let timer=null,start=null,longPress=false;
+
+  function save(){
+    localStorage.setItem('ndp_points',JSON.stringify(points));
+    localStorage.setItem('ndp_shots',JSON.stringify(shots));
+    localStorage.setItem('ndp_half',half);
+    localStorage.setItem('ndp_left',leftName.value);
+    localStorage.setItem('ndp_right',rightName.value);
+  }
+  function slug(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_|_$/g,'')||'frappe'}
+  function bestText(hex){const h=hex.replace('#','');const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return (r*299+g*587+b*114)/1000>150?'#111827':'#fff'}
+  function buildUI(){
+    shotType.innerHTML='';shotButtons.innerHTML='';filterButtons.innerHTML='';
+    shots.forEach(s=>{
+      const o=document.createElement('option');o.value=s.id;o.textContent=s.name;shotType.appendChild(o);
+
+      const wrap=document.createElement('div');
+      wrap.className='shotItem';
+      const b=document.createElement('button');
+      b.textContent=s.name;
+      b.style.background=s.color;
+      b.style.color=bestText(s.color);
+      b.onclick=()=>{shotType.value=s.id;render()};
+      wrap.appendChild(b);
+
+      if(!baseShotIds.includes(s.id)){
+        const del=document.createElement('button');
+        del.className='delShot';
+        del.textContent='×';
+        del.title='Supprimer cette frappe';
+        del.onclick=()=>{
+          if(confirm('Supprimer la frappe « '+s.name+' » ? Les points déjà posés resteront visibles dans les données.')){
+            shots=shots.filter(x=>x.id!==s.id);
+            if(shotType.value===s.id) shotType.value='frappe';
+            if(filter===s.id) filter='all';
+            save();buildUI();render();
+          }
+        };
+        wrap.appendChild(del);
+      }
+      shotButtons.appendChild(wrap);
+    });
+    [{id:'all',name:'Tout',color:'#e5e7eb'},...shots].forEach(s=>{
+      const b=document.createElement('button');b.textContent=s.name;if(s.id!=='all'){b.style.background=s.color;b.style.color=bestText(s.color)}
+      b.onclick=()=>{filter=s.id;render()};filterButtons.appendChild(b);
+    });
+  }
+  function pt(evt){const p=svg.createSVGPoint();p.x=evt.clientX;p.y=evt.clientY;return p.matrixTransform(svg.getScreenCTM().inverse())}
+  function inCourt(p){return p.x>=court.left&&p.x<=court.right&&p.y>=court.top&&p.y<=court.bottom}
+  function inHalf(p){return half==='right'?p.x>=court.net:p.x<=court.net}
+  function fault(p){return p.y<court.playTop||p.y>court.playBottom}
+  function addPoint(p,scored){
+    if(!inCourt(p)||!inHalf(p))return;
+    const s=shots.find(x=>x.id===shotType.value)||shots[0];
+    points.push({x:+p.x.toFixed(1),y:+p.y.toFixed(1),scored,type:s.id,name:s.name,color:s.color,fault:fault(p),t:new Date().toISOString()});
+    save();render();
+  }
+  function hull(pts){
+    if(pts.length<3)return pts;
+    const a=[...pts].sort((p,q)=>p.x===q.x?p.y-q.y:p.x-q.x),cross=(o,p,q)=>(p.x-o.x)*(q.y-o.y)-(p.y-o.y)*(q.x-o.x);
+    const l=[];for(const p of a){while(l.length>=2&&cross(l[l.length-2],l[l.length-1],p)<=0)l.pop();l.push(p)}
+    const u=[];for(let i=a.length-1;i>=0;i--){const p=a[i];while(u.length>=2&&cross(u[u.length-2],u[u.length-1],p)<=0)u.pop();u.push(p)}
+    u.pop();l.pop();return l.concat(u);
+  }
+  function area(poly){if(poly.length<3)return 0;let a=0;for(let i=0;i<poly.length;i++){const j=(i+1)%poly.length;a+=poly[i].x*poly[j].y-poly[j].x*poly[i].y}return Math.abs(a)/2}
+  function render(){
+    leftLabel.textContent=leftName.value;rightLabel.textContent=rightName.value;halfBtn.textContent='Camp : '+(half==='right'?'droite':'gauche');
+    pointsLayer.innerHTML='';hullLayer.innerHTML='';
+    const areaSource=points.filter(p=>filter==='all'||p.type===filter);
+    const valid=areaSource.filter(p=>!p.fault&&(half==='right'?p.x>=court.net:p.x<=court.net));
+    const h=hull(valid);
+    if(h.length>=3){const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');poly.setAttribute('points',h.map(p=>`${p.x},${p.y}`).join(' '));poly.setAttribute('fill','#0f766e');poly.setAttribute('opacity','.20');poly.setAttribute('stroke','#0f766e');poly.setAttribute('stroke-width','4');hullLayer.appendChild(poly)}
+    points.filter(p=>filter==='all'||p.type===filter).forEach(p=>{
+      const g=document.createElementNS('http://www.w3.org/2000/svg','g'),c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',p.scored?14:7);c.setAttribute('fill',p.color||'#111');c.setAttribute('stroke','#fff');c.setAttribute('stroke-width','3');c.setAttribute('opacity',p.fault?'.45':'.92');g.appendChild(c);
+      if(p.fault){const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',p.x);t.setAttribute('y',p.y+5);t.setAttribute('font-size','28');t.setAttribute('font-weight','900');t.setAttribute('text-anchor','middle');t.setAttribute('fill','#dc2626');t.textContent='×';g.appendChild(t)}
+      pointsLayer.appendChild(g);
+    });
+    const playable=(court.right-court.net)*(court.playBottom-court.playTop), percent=Math.min(100,Math.round(area(h)/playable*100)), total=points.length;
+    let out=`<div class="stat"><b>${percent}%</b>espace</div><div class="stat"><b>${total}</b>frappes</div>`;
+    shots.forEach(s=>{const n=points.filter(p=>p.type===s.id).length;out+=`<div class="stat"><b>${n}/${total||0}</b>${s.name}</div>`});
+    statsBox.innerHTML=out;
+  }
+  svg.addEventListener('pointerdown',e=>{e.preventDefault();start=pt(e);longPress=false;clearTimeout(timer);timer=setTimeout(()=>{longPress=true;addPoint(start,true)},520)});
+  svg.addEventListener('pointerup',e=>{e.preventDefault();clearTimeout(timer);if(start&&!longPress)addPoint(start,false);start=null});
+  svg.addEventListener('pointerleave',()=>clearTimeout(timer));
+  halfBtn.onclick=()=>{half=half==='right'?'left':'right';save();render()};
+  document.getElementById('undoBtn').onclick=()=>{points.pop();save();render()};
+  document.getElementById('resetBtn').onclick=()=>{if(confirm('Effacer tous les points ?')){points=[];save();render()}};
+  leftName.oninput=()=>{save();render()};rightName.oninput=()=>{save();render()};shotType.onchange=render;
+  document.getElementById('addShotBtn').onclick=()=>{const input=document.getElementById('newShotName'),name=input.value.trim();if(!name)return;let id=slug(name),i=2;while(shots.some(s=>s.id===id))id=slug(name)+'_'+i++;shots.push({id,name,color:document.getElementById('newShotColor').value});input.value='';save();buildUI();shotType.value=id;render()};
+  document.getElementById('fullscreenBtn').onclick=async()=>{if(!document.fullscreenElement)await document.documentElement.requestFullscreen?.();else await document.exitFullscreen?.()};
+  function download(name,content,mime){const blob=new Blob([content],{type:mime});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href)}
+  document.getElementById('exportBtn').onclick=()=>download('badminton_ndp.json',JSON.stringify({points,shots,half,left:leftName.value,right:rightName.value},null,2),'application/json');
+
+  document.getElementById('captureBtn').onclick=async()=>{
+    // si on est en plein écran, on sort temporairement du mode fullscreen
+    // pour garantir que la capture PNG fonctionne sur tous les navigateurs mobiles
+    let wasFullscreen = !!document.fullscreenElement;
+
+    if(wasFullscreen){
+      try{
+        await document.exitFullscreen();
+        await new Promise(r => setTimeout(r, 300));
+      }catch(e){}
+    }
+
+    const app=document.querySelector('.app');
+    const rect=app.getBoundingClientRect();
+
+    const cloneSvg=svg.cloneNode(true);
+    cloneSvg.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    const svgData=new XMLSerializer().serializeToString(cloneSvg);
+    const svgBlob=new Blob([svgData],{type:'image/svg+xml;charset=utf-8'});
+    const svgUrl=URL.createObjectURL(svgBlob);
+
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+
+      // capture de tout l'écran visible du smartphone/tablette
+      canvas.width=Math.max(window.innerWidth, rect.width);
+      canvas.height=Math.max(window.innerHeight, rect.height);
+
+      const ctx=canvas.getContext('2d');
+
+      // fond général
+      ctx.fillStyle='#f4f7fb';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // zone terrain principale en grand
+      const margin=12;
+      const titleSpace=56;
+      const rightPanelWidth=Math.min(300, canvas.width*0.34);
+      const terrainWidth=canvas.width-rightPanelWidth-(margin*3);
+      const terrainHeight=Math.min((terrainWidth*610)/1340, canvas.height-titleSpace-90);
+
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(margin, titleSpace, terrainWidth+10, terrainHeight+10);
+
+      ctx.drawImage(img, margin+5, titleSpace+5, terrainWidth, terrainHeight);
+
+      // panneau stats simplifié à droite pour que la capture ressemble à l'écran
+      const panelX=margin*2+terrainWidth;
+      ctx.fillStyle='#ffffff';
+      ctx.fillRect(panelX, titleSpace, rightPanelWidth, terrainHeight);
+
+      ctx.fillStyle='#0b3d91';
+      ctx.font='bold 18px Arial';
+      ctx.fillText('Badminton-NDP', panelX+12, titleSpace+28);
+
+      ctx.fillStyle='#111827';
+      ctx.font='14px Arial';
+      ctx.fillText('Joueur gauche : ' + (leftName.value||'-'), panelX+12, titleSpace+60);
+      ctx.fillText('Joueur droite : ' + (rightName.value||'-'), panelX+12, titleSpace+84);
+      ctx.fillText('Camp observé : ' + (half==='right'?'droite':'gauche'), panelX+12, titleSpace+108);
+
+      const total=points.length;
+      const statsY=titleSpace+145;
+      ctx.font='bold 14px Arial';
+      ctx.fillText('Total frappes : ' + total, panelX+12, statsY);
+
+      let y=statsY+28;
+      shots.forEach(s=>{
+        const n=points.filter(p=>p.type===s.id).length;
+        ctx.fillStyle=s.color || '#111';
+        ctx.fillRect(panelX+12, y-10, 10, 10);
+        ctx.fillStyle='#111827';
+        ctx.font='13px Arial';
+        ctx.fillText(s.name + ' : ' + n, panelX+30, y);
+        y += 24;
+      });
+
+      URL.revokeObjectURL(svgUrl);
+
+      canvas.toBlob(async png=>{
+        const a=document.createElement('a');
+        a.href=URL.createObjectURL(png);
+        a.download='badminton_ndp_capture_ecran.png';
+        a.click();
+        URL.revokeObjectURL(a.href);
+
+        // retour automatique en plein écran après capture
+        if(wasFullscreen){
+          try{
+            await new Promise(r => setTimeout(r, 400));
+            await document.documentElement.requestFullscreen?.();
+          }catch(e){}
+        }
+      },'image/png');
+    };
+    img.src=svgUrl;
+  };
+  buildUI();render();
+  if('serviceWorker'in navigator)window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js'));
+});
+</script>
+</body>
+</html>
