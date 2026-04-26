@@ -24,7 +24,13 @@ button.blue{background:#2563eb;color:#fff}
 button.red{background:#fee2e2;color:#991b1b}
 button.active{outline:3px solid #facc15}
 input,select{width:100%;background:#f3f4f6}
-.app{height:100dvh;display:grid;grid-template-rows:auto 1fr auto;gap:4px;padding:4px}
+.app{
+  height:100dvh;
+  display:grid;
+  grid-template-rows:auto minmax(0,1fr) auto auto;
+  gap:4px;
+  padding:4px;
+}
 header{
   background:white;border-radius:12px;padding:4px 6px;box-shadow:var(--shadow);
   display:grid;grid-template-columns:auto 1fr auto;gap:6px;align-items:center;
@@ -33,18 +39,29 @@ header{
 h1{margin:0;font-size:15px;color:var(--dark);line-height:1}
 .subtitle{font-size:9px;color:var(--muted);margin-top:1px}
 .topBtns{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
-main{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 248px;gap:4px}
-.courtWrap{background:white;border-radius:12px;padding:3px;box-shadow:var(--shadow);min-height:0;display:flex;align-items:center;justify-content:center}
+main{
+  min-height:0;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 190px;
+  gap:4px;
+}
+.courtWrap{
+  background:white;border-radius:12px;padding:2px;box-shadow:var(--shadow);min-height:0;display:flex;align-items:center;justify-content:center;
+}
 svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch-action:none;user-select:none}
-.panel{min-height:0;overflow:auto;display:grid;grid-template-columns:1fr;gap:4px;align-content:start}
+.panel{
+  min-height:0;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr;
+  gap:4px;
+  align-content:start;
+}
 .card{background:white;border-radius:10px;padding:5px;box-shadow:var(--shadow)}
 .card h2{font-size:11px;margin:0 0 4px;color:#0f3f5f}
 .row{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.grid3{display:grid;grid-template-columns:1fr 38px 56px;gap:4px}
-.shotItem{display:flex;gap:3px;align-items:center}
-.shotItem button:first-child{flex:1}
-.delShot{background:#fee2e2;color:#991b1b;min-width:26px;padding:6px 7px}
+.grid3{display:grid;grid-template-columns:1fr 38px 40px;gap:4px}
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:3px}
 .stat{border:1px solid #e5e7eb;border-radius:8px;padding:4px;background:#f9fafb;font-size:9px}
 .stat b{display:block;font-size:13px;color:var(--green)}
@@ -52,23 +69,72 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
 .footer{
   display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#6b7280;padding:0 4px;
 }
-@media(max-width:950px){
-  main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
-  .panel{max-height:34dvh;grid-template-columns:repeat(3,minmax(0,1fr))}
+.bottomNav{
+  display:flex;
+  gap:4px;
+  overflow-x:auto;
+  padding:1px 0;
+}
+.bottomNav button{
+  flex:1;
+  min-width:72px;
+  background:#fff;
+  box-shadow:var(--shadow);
+  color:#0f3f5f;
+}
+.drawer{
+  position:fixed;
+  left:6px;
+  right:6px;
+  bottom:24px;
+  z-index:30;
+  background:#fff;
+  border-radius:14px;
+  padding:8px;
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+  max-height:42dvh;
+  overflow:auto;
+}
+.drawerHeader{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin-bottom:6px;
+}
+.drawerHeader h2{margin:0;color:#0f3f5f;font-size:13px}
+.shotItem{display:flex;gap:3px;align-items:center}
+.shotItem button:first-child{flex:1}
+.delShot{background:#fee2e2;color:#991b1b;min-width:26px;padding:6px 7px}
+#frappeCard .row{align-items:stretch}
+#shotButtons{display:grid;grid-template-columns:1fr;gap:4px}
+#shotButtons button{width:100%}
+#frappeCard{height:100%;overflow:auto}
+@media(orientation:landscape){
+  header{padding:3px 6px}
+  .logo{width:26px;height:26px}
+  h1{font-size:14px}
+  .subtitle{display:none}
+  main{grid-template-columns:minmax(0,1fr) 176px}
+  .courtWrap{padding:1px}
+  .panel{display:block}
+  .panel .card{display:none}
+  #frappeCard{display:block}
+  .app{grid-template-rows:auto minmax(0,1fr) auto auto}
+  .bottomNav{display:flex}
 }
 @media(orientation:portrait){
-  .app{grid-template-rows:auto minmax(0,1fr) auto}
+  .app{grid-template-rows:auto minmax(0,1fr) auto auto}
   main{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto}
   .courtWrap{min-height:58dvh}
-  .panel{max-height:34dvh;grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(orientation:landscape){
-  .courtWrap{min-height:0}
+  .panel{display:block}
+  .panel .card{display:none}
+  #frappeCard{display:block}
+  .bottomNav{display:flex}
 }
 @media(max-width:680px){
   header{grid-template-columns:auto 1fr}
   .topBtns{grid-column:1/-1;justify-content:flex-start}
-  .panel{grid-template-columns:1fr 1fr;max-height:35dvh}
 }
 </style>
 </head>
@@ -118,7 +184,7 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
   </section>
 
   <aside class="panel">
-    <div class="card">
+    <div class="card" id="joueursCard">
       <h2>Joueurs</h2>
       <div class="grid2">
         <input id="leftName" placeholder="Gauche">
@@ -126,7 +192,7 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="observationCard">
       <h2>Observation</h2>
       <div class="row">
         <button id="halfBtn" class="primary">Camp : droite</button>
@@ -135,7 +201,7 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="frappeCard">
       <h2>Frappes</h2>
       <select id="shotType"></select>
       <div id="shotButtons" class="row" style="margin-top:5px"></div>
@@ -146,17 +212,17 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
       </div>
     </div>
 
-    <div class="card">
-      <h2>Filtre</h2>
+    <div class="card" id="filtresCard">
+      <h2>Filtres</h2>
       <div id="filterButtons" class="row"></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="statsCard">
       <h2>Stats</h2>
       <div id="statsBox" class="stats"></div>
     </div>
 
-    <div class="card">
+    <div class="card" id="donneesCard">
       <h2>Données</h2>
       <div class="row">
         <button id="exportBtn">JSON</button>
@@ -165,6 +231,22 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
     </div>
   </aside>
 </main>
+
+<nav class="bottomNav">
+  <button data-panel="joueursCard">Joueurs</button>
+  <button data-panel="observationCard">Observation</button>
+  <button data-panel="filtresCard">Filtres</button>
+  <button data-panel="statsCard">Stats</button>
+  <button data-panel="donneesCard">Données</button>
+</nav>
+
+<section id="drawer" class="drawer hidden">
+  <div class="drawerHeader">
+    <h2 id="drawerTitle">Menu</h2>
+    <button id="closeDrawer" class="red">Fermer</button>
+  </div>
+  <div id="drawerContent"></div>
+</section>
 
 <footer class="footer">
   <span>Badminton-NDP</span>
@@ -175,6 +257,31 @@ svg{width:100%;height:100%;display:block;background:#fff;border-radius:8px;touch
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  const drawer=document.getElementById('drawer');
+  const drawerTitle=document.getElementById('drawerTitle');
+  const drawerContent=document.getElementById('drawerContent');
+  const drawerNames={
+    joueursCard:'Joueurs',
+    observationCard:'Observation',
+    filtresCard:'Filtres',
+    statsCard:'Stats',
+    donneesCard:'Données'
+  };
+  function openPanel(id){
+    const card=document.getElementById(id);
+    if(!card)return;
+    drawerTitle.textContent=drawerNames[id]||'Menu';
+    drawerContent.innerHTML='';
+    Array.from(card.children).forEach(child=>{
+      if(child.tagName.toLowerCase()!=='h2') drawerContent.appendChild(child.cloneNode(true));
+    });
+    drawer.classList.remove('hidden');
+    bindDrawerActions(id);
+  }
+  function closePanel(){drawer.classList.add('hidden');drawerContent.innerHTML='';}
+  document.querySelectorAll('.bottomNav button').forEach(b=>b.addEventListener('click',()=>openPanel(b.dataset.panel)));
+  document.getElementById('closeDrawer').addEventListener('click',closePanel);
+
   const svg=document.getElementById('court'), pointsLayer=document.getElementById('pointsLayer'), hullLayer=document.getElementById('hullLayer');
   const shotType=document.getElementById('shotType'), shotButtons=document.getElementById('shotButtons'), filterButtons=document.getElementById('filterButtons');
   const statsBox=document.getElementById('statsBox'), halfBtn=document.getElementById('halfBtn');
@@ -209,6 +316,41 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   leftName.value=localStorage.getItem('ndp_left')||''; rightName.value=localStorage.getItem('ndp_right')||'';
   let timer=null,start=null,longPress=false;
+
+
+  function bindDrawerActions(panelId){
+    if(panelId==='joueursCard'){
+      const inputs=drawerContent.querySelectorAll('input');
+      if(inputs[0]){inputs[0].value=leftName.value;inputs[0].oninput=()=>{leftName.value=inputs[0].value;save();render();};}
+      if(inputs[1]){inputs[1].value=rightName.value;inputs[1].oninput=()=>{rightName.value=inputs[1].value;save();render();};}
+    }
+    if(panelId==='observationCard'){
+      const buttons=drawerContent.querySelectorAll('button');
+      buttons.forEach(btn=>{
+        if(btn.textContent.includes('Camp')) btn.onclick=()=>halfBtn.click();
+        if(btn.textContent.includes('Annuler')) btn.onclick=()=>document.getElementById('undoBtn').click();
+        if(btn.textContent.includes('Effacer')) btn.onclick=()=>document.getElementById('resetBtn').click();
+      });
+    }
+    if(panelId==='filtresCard'){
+      drawerContent.querySelectorAll('button').forEach(btn=>{
+        const label=btn.textContent.trim();
+        btn.onclick=()=>{
+          const target=[{id:'all',name:'Tout'},...shots].find(s=>s.name===label);
+          if(target){filter=target.id;render();closePanel();}
+        };
+      });
+    }
+    if(panelId==='statsCard'){
+      // lecture seule
+    }
+    if(panelId==='donneesCard'){
+      drawerContent.querySelectorAll('button').forEach(btn=>{
+        if(btn.textContent.includes('JSON')) btn.onclick=()=>document.getElementById('exportBtn').click();
+        if(btn.textContent.includes('Capture')) btn.onclick=()=>document.getElementById('captureBtn').click();
+      });
+    }
+  }
 
   function save(){
     localStorage.setItem('ndp_points',JSON.stringify(points));
